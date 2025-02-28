@@ -1,4 +1,4 @@
-FROM node:23-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -6,9 +6,8 @@ EXPOSE 3000
 
 COPY package.json package-lock.json ./
 
-RUN npm ci --silent --prefer-offline --no-audit
+RUN npm install --silent --prefer-offline --no-audit
 
-
-COPY . ./
+COPY . .
 
 CMD ["npm", "start"]

@@ -1,9 +1,17 @@
 services:
   frontend:
-    build: ./frontend
+    build: ./front
     ports:
       - '3000:3000'
+    volumes:
+      - ./front:/app
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - FORCE_COLOR=1
   api:
     build: ./api
     ports:
       - '5050:5050'
+    volumes:
+      - ./api:/app
+
