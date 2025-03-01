@@ -1,5 +1,6 @@
 services:
   frontend:
+    restart: always
     build: ./front
     ports:
       - '3000:3000'
@@ -9,6 +10,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - FORCE_COLOR=1
   api:
+    restart: always
     build: ./api
     ports:
       - '5050:5050'
