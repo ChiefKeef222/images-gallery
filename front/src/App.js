@@ -7,6 +7,8 @@ import ImageCard from './components/ImageCard.js';
 import { Container, Row, Col } from 'react-bootstrap';
 import Welcome from './components/Welcome.js';
 import Spinner from './components/Spinner.js';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:5050';
 
@@ -20,11 +22,10 @@ function App() {
       const res = await axios.get(`${API_URL}/images`);
       setImages(res.data || []);
       setLoading(false);
+      toast.success('Saved images download');
     } catch (error) {
-      console.error(
-        'Error fetching images:',
-        error.response?.data || error.message,
-      );
+      console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -41,11 +42,13 @@ function App() {
       const res = await axios.get(`${API_URL}/new-image?query=${word}`);
       setImages((prevImages) => [{ ...res.data, title: word }, ...prevImages]);
       setWord('');
+      toast.info(`New image ${word.toUpperCase()} was found`);
     } catch (error) {
       console.error(
         'Error searching image:',
         error.response?.data || error.message,
       );
+      toast.error(error.message);
     }
   };
 
@@ -61,9 +64,11 @@ function App() {
             image.id === id ? { ...image, saved: true } : image,
           ),
         );
+        toast.info(`Image ${imageToBeSaved.title.toUpperCase()} was saved`);
       }
     } catch (error) {
       console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -72,12 +77,16 @@ function App() {
       const res = await axios.delete(`${API_URL}/images/${id}`);
       console.log('Ответ от сервера:', res.data);
       if (res.status === 200) {
+        toast.warn(
+          `Image ${images.find((i) => i.id === id).title.toUpperCase()} was deleted`,
+        );
         setImages((prevImages) =>
           prevImages.filter((image) => image._id !== id),
         );
       }
     } catch (error) {
-      console.error('Ошибка при удалении:', error);
+      console.error(error);
+      toast.error(error.message);
     }
   };
 
@@ -112,6 +121,7 @@ function App() {
           </Container>
         </>
       )}
+      <ToastContainer position="bottom-right" />
     </div>
   );
 }
